@@ -17,7 +17,10 @@ import com.example.lab_referral_service.lab_referral_service.repositories.ILabor
 import com.example.lab_referral_service.lab_referral_service.services.interfaces.IAssignmentService;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -73,6 +76,22 @@ public class AssignmentService implements IAssignmentService {
         Assignment assignment = assignmentRepository.findById(assignmentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Assignment not found with ID: " + assignmentId));
         return mapToResponseDTO(assignment);
+    }
+
+    public List<AssignmentResponseDTO> getAssignmentsByLabId(Long labId) {
+        List<Assignment> assignments = assignmentRepository.findByLabId(labId);
+        
+        return assignments.stream()
+                .map(this::mapToResponseDTO)
+                .collect(Collectors.toList());
+    } 
+
+    public List<AssignmentResponseDTO> getAllAssignments() {
+        List<Assignment> assignments = assignmentRepository.findAll();
+        
+        return assignments.stream()
+                .map(this::mapToResponseDTO)
+                .collect(Collectors.toList());
     }
 
     /**

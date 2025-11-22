@@ -3,8 +3,13 @@ package com.example.lab_referral_service.lab_referral_service.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,5 +38,34 @@ public class AssignmentController {
     public ResponseEntity<AssignmentResponseDTO> getAssignmentById(@PathVariable Long id) {
         AssignmentResponseDTO assignment = assignmentService.getAssignmentById(id);
         return ResponseEntity.ok(assignment);
+    }
+
+    @GetMapping("/lab/{labId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TECHNICIAN')")
+    public ResponseEntity<List<AssignmentResponseDTO>> getAssignmentsByLabId(@PathVariable Long labId) {
+        List<AssignmentResponseDTO> assignments = assignmentService.getAssignmentsByLabId(labId);
+        return ResponseEntity.ok(assignments);
+    }
+
+    @GetMapping()
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TECHNICIAN')")
+    public ResponseEntity<List<AssignmentResponseDTO>> getAllAssignments() {
+        List<AssignmentResponseDTO> assignments = assignmentService.getAllAssignments();
+        return ResponseEntity.ok(assignments);
+    }
+
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TECHNICIAN')")
+    public ResponseEntity<AssignmentResponseDTO> updateAssignment(@PathVariable Long id, @Valid @RequestBody AssignmentRequestDTO requestDTO) {
+        AssignmentResponseDTO updatedAssignment = assignmentService.updateAssignment(id, requestDTO);
+        return ResponseEntity.ok(updatedAssignment);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')") // Solo el ADMIN puede eliminar asignaciones
+    public ResponseEntity<Void> deleteAssignment(@PathVariable Long id) {
+        assignmentService.deleteAssignment(id);
+        return ResponseEntity.noContent().build();
     }
 }
