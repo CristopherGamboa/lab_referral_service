@@ -62,6 +62,14 @@ public class AssignmentController {
         return ResponseEntity.ok(updatedAssignment);
     }
 
+    @PutMapping("/{id}/status")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TECHNICIAN')")
+    public ResponseEntity<AssignmentResponseDTO> updateAssignmentStatus(@PathVariable Long id, @RequestParam String status) {
+        AssignmentResponseDTO updatedAssignment = assignmentService.updateAssignmentStatus(id, status);
+        return ResponseEntity.ok(updatedAssignment);
+    }
+
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')") // Solo el ADMIN puede eliminar asignaciones
     public ResponseEntity<Void> deleteAssignment(@PathVariable Long id) {

@@ -124,6 +124,19 @@ public class AssignmentService implements IAssignmentService {
         return mapToResponseDTO(updatedAssignment);
     }
 
+    @Transactional
+    public AssignmentResponseDTO updateAssignmentStatus(Long assignmentId, String status) {
+        // Encontrar asignación existente
+        Assignment existingAssignment = assignmentRepository.findById(assignmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Assignment not found with ID: " + assignmentId));
+
+        existingAssignment.setStatus(status);
+
+        Assignment updatedAssignment = assignmentRepository.save(existingAssignment);
+        
+        return mapToResponseDTO(updatedAssignment);
+    }
+
     /**
      * Elimina una asignación por su ID.
      * @param assignmentId ID de la asignación a eliminar.

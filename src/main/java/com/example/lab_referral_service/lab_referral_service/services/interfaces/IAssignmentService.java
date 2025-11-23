@@ -11,6 +11,7 @@ public interface IAssignmentService {
     AssignmentResponseDTO getAssignmentById(Long assignmentId);
     List<AssignmentResponseDTO> getAssignmentsByLabId(Long labId);
     List<AssignmentResponseDTO> getAllAssignments();
+    AssignmentResponseDTO updateAssignmentStatus(Long assignmentId, String status);
     AssignmentResponseDTO updateAssignment(Long assignmentId, AssignmentRequestDTO requestDTO);
     void deleteAssignment(Long assignmentId);
 }
